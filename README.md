@@ -1,2 +1,2 @@
 # TDT4240_Patterns
-Repo to complete the second exercise in TDT4240
+The singletoon pattern ensures that only one instance of a particular object can exist in an application.
