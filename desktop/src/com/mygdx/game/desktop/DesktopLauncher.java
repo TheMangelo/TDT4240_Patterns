@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.title = "Mikkels Pong";
 		config.height = 640;
 		config.width = 960;
-		new LwjglApplication(new PongGame(), config);
+		PongGame pong= PongGame.getInstance();
+		new LwjglApplication(pong, config);
 	}
 }

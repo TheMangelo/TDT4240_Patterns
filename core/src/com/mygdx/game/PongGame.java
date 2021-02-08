@@ -14,18 +14,30 @@ import sprites.Ball;
 import sprites.Paddle;
 
 public class PongGame extends ApplicationAdapter {
-	private final int WINDOW_WIDTH = 960 ;
+
+	private static PongGame single_pong = null;
+
+	private final int WINDOW_WIDTH = 960;
 	private final int WINDOW_HEIGHT = 640;
 	private OrthographicCamera camera;
 
 	SpriteBatch batch;
 	Texture background;
-	private Paddle paddle1,paddle2;
+	private Paddle paddle1, paddle2;
 	private Ball ball;
 	private int paddle1score, paddle2score;
 	BitmapFont font;
 
+	private PongGame(){}
 
+	public static PongGame getInstance() {
+		if (
+				single_pong == null
+		) {
+			single_pong = new PongGame();}
+
+			return single_pong;
+		}
 
 	@Override
 	public void create () {
