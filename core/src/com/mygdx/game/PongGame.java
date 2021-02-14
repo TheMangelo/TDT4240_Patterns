@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import sprites.BallObject;
-import sprites.Paddle;
 import sprites.PaddleInstance;
 
 public class PongGame extends ApplicationAdapter {
