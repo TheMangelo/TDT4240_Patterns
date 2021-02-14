@@ -24,6 +24,7 @@ public class Ball {
         position = new Vector3(x,y,0);
         texture = new Texture("Ball.png");
         bounds = new Rectangle(x,y,size, size);
+
     }
 
     public void reset(float dt){

@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import sprites.Ball;
+import sprites.BallObject;
 import sprites.Paddle;
+import sprites.PaddleInstance;
 
 public class PongGame extends ApplicationAdapter {
 
@@ -23,8 +25,8 @@ public class PongGame extends ApplicationAdapter {
 
 	SpriteBatch batch;
 	Texture background;
-	private Paddle paddle1, paddle2;
-	private Ball ball;
+	private PaddleInstance paddle1, paddle2;
+	private BallObject ball;
 	private int paddle1score, paddle2score;
 	BitmapFont font;
 
@@ -46,11 +48,9 @@ public class PongGame extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		ball = new Ball(50,100);
-		paddle1 = new Paddle(10,10,true);
-		paddle1score = 0;
-		paddle2 = new Paddle(WINDOW_WIDTH-50,10,false);
-		paddle2score = 0;
+		ball = new BallObject(50,100);
+		paddle1 = new PaddleInstance(10,10,2);
+		paddle2 = new PaddleInstance(WINDOW_WIDTH-50,10,2);
 
 		font = new BitmapFont();
 		font.setColor(Color.RED);
@@ -80,8 +80,8 @@ public class PongGame extends ApplicationAdapter {
 				paddle2.getWidth(),
 				paddle2.getHeight());
 
-		font.draw(batch, ""+paddle1score, WINDOW_WIDTH/2-100, WINDOW_HEIGHT-50);
-		font.draw(batch, ""+paddle2score, WINDOW_WIDTH/2+100, WINDOW_HEIGHT-50);
+		font.draw(batch, ""+paddle1.getScore(), WINDOW_WIDTH/2-100, WINDOW_HEIGHT-50);
+		font.draw(batch, ""+paddle2.getScore(), WINDOW_WIDTH/2+100, WINDOW_HEIGHT-50);
 		font.draw(batch, "W=Up, S=down",20, WINDOW_HEIGHT-50);
 		font.draw(batch, "Up, Down",WINDOW_WIDTH-200, WINDOW_HEIGHT-50);
 		batch.end();
@@ -99,7 +99,6 @@ public class PongGame extends ApplicationAdapter {
 		}
 
 		//INPUTHANDLER FOR PADDLE1, PLAYER1
-
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && paddle1.getPosition().y+paddle1.getHeight() < WINDOW_HEIGHT ){
 			paddle1.update(Gdx.graphics.getDeltaTime(),true);
 		}
@@ -122,35 +121,34 @@ public class PongGame extends ApplicationAdapter {
 		handleInput();
 		ball.update(dt);
 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			Gdx.app.exit();
+		}
+
 		//Bounce fra toppen
 		if(ball.getPosition().y + ball.getSize() >= WINDOW_HEIGHT || ball.getPosition().y <= 1){
 			ball.changeYDirection();
 			System.out.println("It bounced");
 		}
-
 		//Collides with left
 		if(paddle1.collides(ball.getBounds()) || paddle2.collides(ball.getBounds())){
 			ball.parry();
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-			Gdx.app.exit();
-		}
-
 		//Player 1 lost
 		if(ball.getPosition().x < 0){
-			paddle2score ++;
+			paddle2.incrementScore();
 			ball.reset(dt);
 		}
 
 		if(ball.getPosition().x > WINDOW_WIDTH){
-			paddle1score++;
+			paddle2.incrementScore();
 			ball.reset(dt);
 		}
 
 		if(paddle1score == 21 ||paddle2score == 21){
-			paddle1score = 0;
-			paddle2score = 0;
+			paddle1.resetScore();
+			paddle2.resetScore();
 		}
 	}
 }
