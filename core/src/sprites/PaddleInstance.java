@@ -13,27 +13,22 @@ public class PaddleInstance extends GameObject {
     private final int WINDOW_HEIGHT = 640;
     private int MOVEMENT = 400;
     private boolean left;
-    private Texture texture = new Texture("paddle.png");
+    private Texture texture;
     private int score = 0;
 
-
+    //Default constructor
     public PaddleInstance(int x, int y) {
         super(x,y);
         velocity = new Vector3(0,400,0);
         bounds = new Rectangle(x,y,texture.getWidth(), texture.getHeight());
-
-    }
-
-    public PaddleInstance(int x, int y, int x_velocity, int y_velocity) {
-        super(x,y);
         texture = new Texture("paddle.png");
-        velocity.y = y_velocity;
-        velocity.x = x_velocity;
 
     }
 
+    //Constructor for setting different sizes
     public PaddleInstance(int x, int y, int ratio){
         super(x,y);
+        texture = new Texture("paddle.png");
         velocity = new Vector3(0,400,0);
         position = new Vector3(x,y,0);
         bounds = new Rectangle(x,y,texture.getWidth()/ratio, texture.getHeight()/ratio);
@@ -47,6 +42,10 @@ public class PaddleInstance extends GameObject {
             position.add(0, -velocity.y*dt, 0);
         }
         bounds.setPosition(position.x, position.y);
+    }
+
+    public void dispose(){
+        texture.dispose();
     }
 
     public void incrementScore(){
@@ -75,7 +74,6 @@ public class PaddleInstance extends GameObject {
 
     @Override
     public void update(float dt) {
-
     }
 
 }

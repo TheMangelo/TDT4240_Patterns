@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import sprites.Ball;
 import sprites.BallObject;
 import sprites.Paddle;
 import sprites.PaddleInstance;
@@ -25,9 +24,8 @@ public class PongGame extends ApplicationAdapter {
 
 	SpriteBatch batch;
 	Texture background;
-	private PaddleInstance paddle1, paddle2;
-	private BallObject ball;
-	private int paddle1score, paddle2score;
+	PaddleInstance paddle1, paddle2;
+	BallObject ball;
 	BitmapFont font;
 
 	private PongGame(){}
@@ -49,13 +47,12 @@ public class PongGame extends ApplicationAdapter {
 		camera.setToOrtho(false, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		ball = new BallObject(50,100);
+		System.out.println("This is an " + ball.getClass().getName());
 		paddle1 = new PaddleInstance(10,10,2);
 		paddle2 = new PaddleInstance(WINDOW_WIDTH-50,10,2);
-
 		font = new BitmapFont();
 		font.setColor(Color.RED);
 		font.getData().setScale(3);
-
 
 	}
 
@@ -80,8 +77,8 @@ public class PongGame extends ApplicationAdapter {
 				paddle2.getWidth(),
 				paddle2.getHeight());
 
-		font.draw(batch, ""+paddle1.getScore(), WINDOW_WIDTH/2-100, WINDOW_HEIGHT-50);
-		font.draw(batch, ""+paddle2.getScore(), WINDOW_WIDTH/2+100, WINDOW_HEIGHT-50);
+		/*font.draw(batch, ""+paddle1.getScore(), WINDOW_WIDTH/2-100, WINDOW_HEIGHT-50);
+		font.draw(batch, ""+paddle2.getScore(), WINDOW_WIDTH/2+100, WINDOW_HEIGHT-50);*/
 		font.draw(batch, "W=Up, S=down",20, WINDOW_HEIGHT-50);
 		font.draw(batch, "Up, Down",WINDOW_WIDTH-200, WINDOW_HEIGHT-50);
 		batch.end();
@@ -108,6 +105,21 @@ public class PongGame extends ApplicationAdapter {
 
 	}
 
+	//Ball collides with paddles
+	public void paddleDetection(){
+		if(paddle1.collides(ball.getBounds()) || paddle2.collides(ball.getBounds())){
+			ball.parry();
+		}
+	}
+
+	//Ball collides with the top or bottom of the screen
+	public void windowCollison(){
+		if(ball.getPosition().y + ball.getSize() >= WINDOW_HEIGHT || ball.getPosition().y <= 1){
+			ball.changeYDirection();
+			System.out.println("It bounced");
+		}
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
@@ -117,25 +129,8 @@ public class PongGame extends ApplicationAdapter {
 		ball.dispose();
 	}
 
-	public void update(float dt){
-		handleInput();
-		ball.update(dt);
-
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-			Gdx.app.exit();
-		}
-
-		//Bounce fra toppen
-		if(ball.getPosition().y + ball.getSize() >= WINDOW_HEIGHT || ball.getPosition().y <= 1){
-			ball.changeYDirection();
-			System.out.println("It bounced");
-		}
-		//Collides with left
-		if(paddle1.collides(ball.getBounds()) || paddle2.collides(ball.getBounds())){
-			ball.parry();
-		}
-
-		//Player 1 lost
+	//Detects if the ball is out of bounds or
+	public void scoreUpdate(float dt){
 		if(ball.getPosition().x < 0){
 			paddle2.incrementScore();
 			ball.reset(dt);
@@ -146,9 +141,26 @@ public class PongGame extends ApplicationAdapter {
 			ball.reset(dt);
 		}
 
-		if(paddle1score == 21 ||paddle2score == 21){
+		if(paddle1.getScore() == 21 ||paddle2.getScore() == 21) {
 			paddle1.resetScore();
 			paddle2.resetScore();
 		}
+
+	}
+
+	public void update(float dt){
+		handleInput();
+		ball.update(dt);
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			Gdx.app.exit();
+		}
+
+		//Bounce from the top of the scren
+		windowCollison();
+		//Collides with paddles
+		paddleDetection();
+		scoreUpdate(dt);
+
 	}
 }

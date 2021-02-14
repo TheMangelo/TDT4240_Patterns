@@ -18,6 +18,8 @@ public class BallObject extends GameObject {
         velocity = new Vector3(300,200,0);
     }
 
+
+    //Constructor setting different size of ball
     public BallObject(int x, int y, int size){
         super(x,y);
         this.size = size;
@@ -25,11 +27,9 @@ public class BallObject extends GameObject {
         texture = new Texture("Ball.png");
         bounds = new Rectangle(x,y,size, size);
         velocity = new Vector3(300,200,0);
-
     }
 
     public void reset(float dt){
-
         position.x = WINDOW_WIDTH/2;
         position.y = WINDOW_HEIGHT/2;
         bounds.setPosition(position.x, position.y);
@@ -65,6 +65,9 @@ public class BallObject extends GameObject {
         velocity.x += velocity.x*0.1;
     }
 
+    public int getSize() {
+        return size;
+    }
 
     @Override
     public void update(float dt) {
@@ -74,7 +77,7 @@ public class BallObject extends GameObject {
 
     @Override
     public void update(float dt, boolean up) {
-
+        System.out.println("Wrong update method in ballobject");
     }
 
 }

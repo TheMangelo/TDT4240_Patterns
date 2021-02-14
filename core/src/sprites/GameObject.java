@@ -20,11 +20,6 @@ public abstract class GameObject {
         position = new Vector3(x,y,0);
     }
 
-    public GameObject(int x, int y, Texture texture, int ratio){
-        position = new Vector3(x,y,0);
-        this.texture = texture;
-        bounds = new Rectangle(x,y,texture.getWidth()/ratio, texture.getHeight()/ratio);
-    }
 
     public void setVelocity(int x, int y){
         velocity.x = x;
@@ -34,7 +29,6 @@ public abstract class GameObject {
     public Texture getTexture(){
         return texture;
     }
-
 
     public Vector3 getPosition() {
         return position;
@@ -69,8 +63,5 @@ public abstract class GameObject {
     public void dispose(){
         texture.dispose();
     }
-
-
-
 
 }
